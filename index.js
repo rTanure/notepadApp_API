@@ -1,7 +1,7 @@
 const express = require("express")
 const app = express()
 
-const PORT = 8080
+const PORT = process.env.PORT || 8080
 
 app.use(express.json())
 
@@ -148,5 +148,4 @@ app.route('/api/notes/:id/:author').delete((req, res)=>{
     
 })
 
-app.listen(PORT)
-console.log("API rodando na porta: " + PORT)
+app.listen(PORT, () => console.log(`Server is running in port ${PORT}`))
