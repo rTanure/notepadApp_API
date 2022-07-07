@@ -45,6 +45,21 @@ var notesList = [
     },
 ]
 
+function getIndexByID(id) {
+    for(index in notesList) {
+        if(Number(notesList[index].id) === Number(id)) {
+            return index
+        } 
+    }
+}
+
+function isTheAuthor(id, author) {
+    let index = getIndexByID(id)
+    if(notesList[index].author === author) {
+        return true
+    } 
+}
+
 // Obter todos os resultados da API
 app.route('/api').get((req, res)=>{
     res.send({
@@ -60,6 +75,24 @@ app.route('/api/notes').get((req, res)=>{
         "type": "success",
         "data": notesList
     })
+})
+
+app.route('/api/note/:id').get((req, res)=>{
+    const index = getIndexByID(req.params.id)
+    console.log(index)
+    if (index != undefined) {
+        res.send({
+            "message": `A nota ${req.params.id} foi acessada com uscesso`,
+            "type": "success",
+            "data": notesList[index]
+        })
+    } else {
+        res.send({
+            "message": `A nota ${req.params.id} não foi encontrada no banco de dados`,
+            "type": "error"
+        })
+    }
+    
 })
 
 // Add a new note
@@ -93,20 +126,7 @@ app.route('/api/notes').post((req,res)=>{
     }
 })
 
-function getIndexByID(id) {
-    for(index in notesList) {
-        if(Number(notesList[index].id) === Number(id)) {
-            return index
-        } 
-    }
-}
 
-function isTheAuthor(id, author) {
-    let index = getIndexByID(id)
-    if(notesList[index].author === author) {
-        return true
-    } 
-}
 
 app.route('/api/notes/:id').put((req, res)=>{
     let noteId = req.params.id
